@@ -1,21 +1,65 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h2>Configuration</h2>
-    <h2></h2>
-    <div>
-        <form method="POST">
-            {% csrf_token %}
-            
-            <h4 class="mt-03">Choose Target:</h4>
-            {% for device in devices %}
-                <input type="checkbox" name="device" value="{{ device.id }}"> {{ device.ip_address }} - {{ device.vendor }}<br>
-            {% endfor %}
+    <div class="container mt-4">
+        <h2 class="text-center mb-4">Configuration</h2>
+        <div class="card">
+            <div class="card-body">
+                <form method="POST" onsubmit="return validateForm()">
+                    {% csrf_token %}
+                    
+                    <h4 class="mt-3">Choose Target:</h4>
+                    <div class="form-group">
+                        <div class="row">
+                            {% for device in devices %}
+                                <div class="col-md-4 col-sm-6">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="device" value="{{ device.id }}" id="device{{ device.id }}">
+                                        <label class="form-check-label" for="device{{ device.id }}">
+                                            {{ device.ip_address }} - {{ device.vendor }}
+                                        </label>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
 
-            <h4 class="mt-03">Cisco Command:</h4>
-            <textarea name="cisco_command" class="form-control" rows="5"></textarea>
+                    <div class="accordion" id="ciscoAccordion">
+                        <div class="card">
+                            <div class="card-header" id="headingOne">
+                                <h2 class="mb-0">
+                                    <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                        <strong>CISCO COMMAND</strong>
+                                    </button>
+                                </h2>
+                            </div>
 
-            <button type="submit" class="btn btn-primary mt-3">Execute</button>
-        </form>
+                            <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#ciscoAccordion">
+                                <div class="card-body">
+                                    <h4 class="mt-3">Cisco Command:</h4>
+                                    <div class="alert alert-primary" role="alert">
+                                        <i class="fas fa-exclamation-circle"></i> Please write each command on a new line.
+                                    </div>
+                                    <textarea name="cisco_command" id="cisco_command" class="form-control" rows="5"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary mt-3">Execute</button>
+                </form>
+            </div>
+        </div>
     </div>
 {% endblock %}
+
+<script>
+    function validateForm() {
+        var textarea = document.getElementById('cisco_command').value.trim();
+        if (textarea === "") {
+            alert("Cisco Command textarea cannot be empty.");
+            return false;
+        }
+        return true;
+    }
+</script>
