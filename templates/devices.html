@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2>Device List</h2>
+    <div>
+        <table class="table">
+            <tr>
+                <th>Hostname</th>
+                <th>IP Address</th>
+                <th>Device Type</th>
+            </tr>
+            {% for device in devices %}
+                <tr>
+                    <td>{{ device.hostname }}</td>
+                    <td>{{ device.ip_address }}</td>
+                    <td>{{ device.vendor }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+{% endblock %}
